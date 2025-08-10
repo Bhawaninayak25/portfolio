@@ -7,6 +7,9 @@ const Home = () => {
     <section id="home" className="home section">
       <div className="home-content">
         <div className="home-text fade-in-left">
+           <div className="home-image fade-in-right">
+          <img src={profileImage} alt="Bhawani Shankar" className="profile-img" />
+        </div>
           <h1>Hello, I'm <span className="highlight">Bhawani Shankar</span></h1>
           <p className='highlight'>Full Stack Developer | BCA Graduate from Engineering College Bikaner</p>
 
@@ -18,9 +21,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="home-image fade-in-right">
-          <img src={profileImage} alt="Bhawani Shankar" className="profile-img" />
-        </div>
+       
       </div>
     </section>
   );

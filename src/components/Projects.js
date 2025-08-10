@@ -14,6 +14,18 @@ const projects = [
     liveLink: '',
     repoLink: 'https://github.com/yourusername/task-manager',
   },
+    {
+    title: 'e-commerce website',
+    description: 'A full-stack MERN task manager allowing users to create, track, and delete tasks in real-time.',
+    liveLink: '',
+    repoLink: 'https://github.com/yourusername/task-manager',
+  },
+    {
+    title: 'watsapp-web-clone',
+    description: 'A full-stack MERN task manager allowing users to create, track, and delete tasks in real-time.',
+    liveLink: '',
+    repoLink: 'https://github.com/yourusername/task-manager',
+  },
 ];
 
 const Projects = () => {
