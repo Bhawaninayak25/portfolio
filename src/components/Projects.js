@@ -6,7 +6,7 @@ const projects = [
     title: 'Portfolio Website',
     description: 'A modern, fully responsive portfolio site built with React, showcasing my personal projects and resume.',
     liveLink: '',
-    repoLink: 'https://github.com/yourusername/portfolio',
+    repoLink: 'https://github.com/Bhawaninayak25/portfolio.git',
   },
   {
     title: 'Task Manager App',

@@ -15,6 +15,7 @@ const Header = () => {
         <a href="#skills">Skills</a>
         <a href="#projects">Projects</a>
         <a href="#contact">Contact</a>
+         
       </nav>
       <div className="menu-toggle" onClick={toggleMenu}>
         <span className="bar"></span>

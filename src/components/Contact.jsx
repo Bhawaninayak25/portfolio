@@ -19,7 +19,7 @@ const Contact = () => {
           🐙 GitHub
         </a>
         <a href="https://wa.me/917073692001" target="_blank" rel="noopener noreferrer" className="contact-link whatsapp">
-          💬 WhatsApp
+          💬 WhatsApp- 
         </a>
         <a href="https://instagram.com/bhawani_nyk05" target="_blank" rel="noopener noreferrer" className="contact-link instagram">
           🧡 Instagram
