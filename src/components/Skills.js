@@ -4,7 +4,8 @@ import React from 'react';
 const Skills = () => {
   const skills = [
     'HTML5', 'CSS3', 'JavaScript (ES6+)', 'React', 'Node.js',
-    'Express.js', 'MongoDB', 'SQL', 'Git', 'REST APIs'
+    'Express.js', 'MongoDB', 'SQL', 'Git', 'REST APIs', 'NEST.js','Docker', 'github', 'jwt', 'github',
+    'PWA', 
   ];
 
   return (

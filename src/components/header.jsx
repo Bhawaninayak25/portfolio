@@ -8,7 +8,7 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div className="logo"> Myportfolio</div>
+      <div className="logo"> Bhawaninayak25</div>
       <nav className={`nav ${menuOpen ? 'open' : ''}`}>
         <a href="#home">Home</a>
         <a href="#about">About</a>
