@@ -14,12 +14,22 @@ const stats = [
   { value: '100%', label: 'Mobile responsive layouts' },
 ];
 
+const trustPoints = [
+  'Clean component structure',
+  'Responsive design systems',
+  'API-first implementation',
+];
+
 const HomeSection = () => {
   return (
     <section id="home" className="hero section">
       <div className="hero-grid">
         <div className="hero-copy">
           <p className="eyebrow">Open to full-time developer roles</p>
+          <div className="hero-kicker">
+            <span className="hero-kicker__dot"></span>
+            Available for internships and junior developer positions
+          </div>
           <h1>
             Building polished web experiences with
             <span> modern full stack development.</span>
@@ -49,6 +59,8 @@ const HomeSection = () => {
         <div className="hero-visual">
           <div className="profile-card">
             <div className="profile-card__glow"></div>
+            <div className="floating-badge floating-badge--top">React + Node.js</div>
+            <div className="floating-badge floating-badge--bottom">Job-ready portfolio</div>
             <img src={profileImage} alt="Bhawani Shankar" className="profile-img" />
             <div className="profile-card__content">
               <p className="profile-card__title">Full Stack Developer</p>
@@ -67,6 +79,12 @@ const HomeSection = () => {
             <strong>{stat.value}</strong>
             <span>{stat.label}</span>
           </article>
+        ))}
+      </div>
+
+      <div className="trust-strip" aria-label="Value points">
+        {trustPoints.map((item) => (
+          <span key={item}>{item}</span>
         ))}
       </div>
     </section>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 const contactLinks = [
   {
@@ -7,9 +7,9 @@ const contactLinks = [
     description: 'Best for hiring conversations and project discussion',
   },
   {
-    label: 'LinkedIn',
-    href: 'https://linkedin.com/in/yourprofile',
-    description: 'Professional profile and networking',
+    label: 'Instagram',
+    href: 'https://instagram.com/bhawani_nyk05',
+    description: 'Primary social DM channel for direct conversation',
   },
   {
     label: 'GitHub',
@@ -17,13 +17,127 @@ const contactLinks = [
     description: 'Code samples and project repositories',
   },
   {
-    label: 'WhatsApp',
-    href: 'https://wa.me/917073692001',
-    description: 'Fast replies for direct communication',
+    label: 'LinkedIn',
+    href: 'https://linkedin.com/in/yourprofile',
+    description: 'Professional profile and networking',
   },
 ];
 
+const quickReplies = [
+  'I want to hire you',
+  'Need a React developer',
+  'Let us discuss a project',
+];
+
+const API_URL = process.env.REACT_APP_CHAT_API_URL || 'http://localhost:8787';
+const CONVERSATION_ID = 'website-default';
+
 const ContactSection = () => {
+  const initialMessages = useMemo(
+    () => [
+      {
+        id: 1,
+        sender: 'assistant',
+        text: 'Hi, send a message here and I can route the conversation into the live chat system. Instagram sync needs a professional account plus Meta webhook setup.',
+      },
+    ],
+    []
+  );
+
+  const [chatOpen, setChatOpen] = useState(false);
+  const [draft, setDraft] = useState('');
+  const [messages, setMessages] = useState(initialMessages);
+  const [status, setStatus] = useState('Website chat is ready.');
+  const [isSending, setIsSending] = useState(false);
+
+  useEffect(() => {
+    if (!chatOpen) {
+      return undefined;
+    }
+
+    const loadMessages = async () => {
+      try {
+        const response = await fetch(
+          `${API_URL}/api/chat/messages?conversation=${CONVERSATION_ID}`
+        );
+        const data = await response.json();
+
+        if (response.ok && Array.isArray(data.messages)) {
+          setMessages((current) =>
+            data.messages.length > 0
+              ? data.messages.map((message) => ({
+                  id: message.id,
+                  sender: message.sender === 'owner' ? 'assistant' : 'user',
+                  text: message.text,
+                }))
+              : current
+          );
+        }
+      } catch (error) {
+        setStatus(
+          'Live sync needs the chat server running. Website messages can be stored there and Instagram webhooks can push synced replies back here.'
+        );
+      }
+    };
+
+    loadMessages();
+    const intervalId = setInterval(loadMessages, 4000);
+    return () => clearInterval(intervalId);
+  }, [chatOpen]);
+
+  const sendMessage = async (text) => {
+    const value = text.trim();
+
+    if (!value) {
+      return;
+    }
+
+    const optimisticMessage = {
+      id: Date.now(),
+      sender: 'user',
+      text: value,
+    };
+
+    setMessages((current) => [...current, optimisticMessage]);
+    setDraft('');
+    setChatOpen(true);
+    setIsSending(true);
+
+    try {
+      const response = await fetch(`${API_URL}/api/chat/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          conversationId: CONVERSATION_ID,
+          sender: 'visitor',
+          source: 'website',
+          text: value,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Unable to send');
+      }
+
+      setStatus(
+        'Message sent. For real website + Instagram sync, connect this server to Meta Instagram messaging webhooks.'
+      );
+    } catch (error) {
+      setStatus(
+        'Chat server not connected yet. Start the local server or deploy the backend to make this chat live.'
+      );
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    sendMessage(draft);
+  };
+
   return (
     <section id="contact" className="contact section">
       <div className="contact-banner">
@@ -36,10 +150,98 @@ const ContactSection = () => {
           </p>
         </div>
 
-        <a href="mailto:bhawaninayak1111@gmail.com" className="button button-primary">
+        <button
+          type="button"
+          className="button button-primary"
+          onClick={() => setChatOpen((current) => !current)}
+        >
           Start a Conversation
-        </a>
+        </button>
       </div>
+
+      {chatOpen && (
+        <div className="chat-shell">
+          <div className="chat-panel">
+            <div className="chat-panel__header">
+              <div>
+                <p className="chat-title">Live Chat</p>
+                <span className="chat-subtitle">{status}</span>
+              </div>
+              <button
+                type="button"
+                className="chat-close"
+                onClick={() => setChatOpen(false)}
+                aria-label="Close chat"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="chat-messages">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`chat-bubble chat-bubble--${message.sender}`}
+                >
+                  {message.text}
+                </div>
+              ))}
+            </div>
+
+            <div className="chat-quick-replies">
+              {quickReplies.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  className="chat-chip"
+                  onClick={() => sendMessage(item)}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+
+            <form className="chat-form" onSubmit={handleSubmit}>
+              <input
+                type="text"
+                value={draft}
+                onChange={(event) => setDraft(event.target.value)}
+                placeholder="Type your message..."
+                className="chat-input"
+              />
+              <button
+                type="submit"
+                className="button button-primary"
+                disabled={isSending}
+              >
+                {isSending ? 'Sending...' : 'Send'}
+              </button>
+            </form>
+
+            <div className="chat-actions">
+              <a
+                href="https://ig.me/m/bhawani_nyk05"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn github"
+              >
+                Open Instagram
+              </a>
+              <a
+                href="https://instagram.com/bhawani_nyk05"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn github"
+              >
+                Instagram Profile
+              </a>
+              <a href="mailto:bhawaninayak1111@gmail.com" className="btn live">
+                Email Backup
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="contact-grid">
         {contactLinks.map((item) => (
