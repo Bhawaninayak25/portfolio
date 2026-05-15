@@ -1,266 +1,130 @@
-import React, { useEffect, useMemo, useState } from 'react';
-
-const contactLinks = [
-  {
-    label: 'Email',
-    href: 'mailto:bhawaninayak1111@gmail.com',
-    description: 'Best for hiring conversations and project discussion',
-  },
-  {
-    label: 'Instagram',
-    href: 'https://instagram.com/bhawani_nyk05',
-    description: 'Primary social DM channel for direct conversation',
-  },
-  {
-    label: 'GitHub',
-    href: 'https://github.com/bhawaninayak25',
-    description: 'Code samples and project repositories',
-  },
-  {
-    label: 'LinkedIn',
-    href: 'https://linkedin.com/in/yourprofile',
-    description: 'Professional profile and networking',
-  },
-];
-
-const quickReplies = [
-  'I want to hire you',
-  'Need a React developer',
-  'Let us discuss a project',
-];
-
-const API_URL = process.env.REACT_APP_CHAT_API_URL || 'http://localhost:8787';
-const CONVERSATION_ID = 'website-default';
+import React, { useState } from 'react';
+import { chatSuggestions, getChatReply } from '../data/chatResponses';
 
 const ContactSection = () => {
-  const initialMessages = useMemo(
-    () => [
-      {
-        id: 1,
-        sender: 'assistant',
-        text: 'Hi, send a message here and I can route the conversation into the live chat system. Instagram sync needs a professional account plus Meta webhook setup.',
-      },
-    ],
-    []
-  );
+  const [chatInput, setChatInput] = useState('');
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState([
+    {
+      type: 'assistant',
+      text: 'Chat like a friend. Neeche suggestions se start kar sakte ho.',
+    },
+  ]);
 
-  const [chatOpen, setChatOpen] = useState(false);
-  const [draft, setDraft] = useState('');
-  const [messages, setMessages] = useState(initialMessages);
-  const [status, setStatus] = useState('Website chat is ready.');
-  const [isSending, setIsSending] = useState(false);
+  const sendChatMessage = (text) => {
+    const message = text.trim();
+    if (!message) return;
 
-  useEffect(() => {
-    if (!chatOpen) {
-      return undefined;
-    }
-
-    const loadMessages = async () => {
-      try {
-        const response = await fetch(
-          `${API_URL}/api/chat/messages?conversation=${CONVERSATION_ID}`
-        );
-        const data = await response.json();
-
-        if (response.ok && Array.isArray(data.messages)) {
-          setMessages((current) =>
-            data.messages.length > 0
-              ? data.messages.map((message) => ({
-                  id: message.id,
-                  sender: message.sender === 'owner' ? 'assistant' : 'user',
-                  text: message.text,
-                }))
-              : current
-          );
-        }
-      } catch (error) {
-        setStatus(
-          'Live sync needs the chat server running. Website messages can be stored there and Instagram webhooks can push synced replies back here.'
-        );
-      }
-    };
-
-    loadMessages();
-    const intervalId = setInterval(loadMessages, 4000);
-    return () => clearInterval(intervalId);
-  }, [chatOpen]);
-
-  const sendMessage = async (text) => {
-    const value = text.trim();
-
-    if (!value) {
-      return;
-    }
-
-    const optimisticMessage = {
-      id: Date.now(),
-      sender: 'user',
-      text: value,
-    };
-
-    setMessages((current) => [...current, optimisticMessage]);
-    setDraft('');
-    setChatOpen(true);
-    setIsSending(true);
-
-    try {
-      const response = await fetch(`${API_URL}/api/chat/messages`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          conversationId: CONVERSATION_ID,
-          sender: 'visitor',
-          source: 'website',
-          text: value,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Unable to send');
-      }
-
-      setStatus(
-        'Message sent. For real website + Instagram sync, connect this server to Meta Instagram messaging webhooks.'
-      );
-    } catch (error) {
-      setStatus(
-        'Chat server not connected yet. Start the local server or deploy the backend to make this chat live.'
-      );
-    } finally {
-      setIsSending(false);
-    }
+    setIsChatOpen(true);
+    setChatMessages((current) => [
+      ...current,
+      { type: 'user', text: message },
+      { type: 'assistant', text: getChatReply(message) },
+    ]);
+    setChatInput('');
   };
 
-  const handleSubmit = (event) => {
+  const handleChatSubmit = (event) => {
     event.preventDefault();
-    sendMessage(draft);
+    sendChatMessage(chatInput);
   };
 
   return (
-    <section id="contact" className="contact section">
-      <div className="contact-banner">
-        <div>
-          <p className="eyebrow">Let&apos;s build something useful</p>
-          <h2>Available for internships, freelance work, and developer roles.</h2>
-          <p className="contact-description">
-            If you&apos;re hiring or want to collaborate on a product, I&apos;d be
-            happy to connect and discuss how I can contribute.
+    <section id="contact" className="px-4 py-14 sm:px-6 lg:px-8 lg:py-24">
+      <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="mb-3 text-sm font-extrabold uppercase tracking-[0.2em] text-amber-700 dark:text-amber-300">Chat</p>
+          <h2 className="font-display text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            Chat like a friend
+          </h2>
+          <p className="mx-auto mt-5 max-w-2xl leading-8 text-zinc-600 dark:text-zinc-300">
+            Casual Hinglish questions try karo. Suggestions click karo ya apna message type karo.
           </p>
         </div>
 
-        <button
-          type="button"
-          className="button button-primary"
-          onClick={() => setChatOpen((current) => !current)}
-        >
-          Start a Conversation
-        </button>
-      </div>
-
-      {chatOpen && (
-        <div className="chat-shell">
-          <div className="chat-panel">
-            <div className="chat-panel__header">
+        {isChatOpen ? (
+          <div className="mx-auto mt-8 max-w-3xl overflow-hidden rounded-[1.35rem] border border-black/10 bg-white/85 shadow-premium backdrop-blur transition dark:border-white/10 dark:bg-zinc-950/70 sm:mt-10 sm:rounded-[2rem]">
+            <div className="flex items-center justify-between gap-4 border-b border-black/10 bg-white/50 p-4 dark:border-white/10 dark:bg-white/5 sm:p-6">
               <div>
-                <p className="chat-title">Live Chat</p>
-                <span className="chat-subtitle">{status}</span>
+                <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-amber-700 dark:text-amber-300">Online</span>
+                <h3 className="mt-1 font-display text-xl font-bold sm:text-2xl">Bhawani Chat</h3>
               </div>
-              <button
-                type="button"
-                className="chat-close"
-                onClick={() => setChatOpen(false)}
-                aria-label="Close chat"
-              >
-                Close
-              </button>
-            </div>
-
-            <div className="chat-messages">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`chat-bubble chat-bubble--${message.sender}`}
-                >
-                  {message.text}
-                </div>
-              ))}
-            </div>
-
-            <div className="chat-quick-replies">
-              {quickReplies.map((item) => (
+              <div className="flex items-center gap-3">
+                <span className="h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_0_7px_rgba(52,211,153,0.16)]"></span>
                 <button
-                  key={item}
                   type="button"
-                  className="chat-chip"
-                  onClick={() => sendMessage(item)}
+                  onClick={() => setIsChatOpen(false)}
+                  className="rounded-full border border-black/10 bg-white/80 px-3 py-2 text-xs font-extrabold text-zinc-700 transition hover:bg-white dark:border-white/10 dark:bg-white/10 dark:text-zinc-200"
                 >
-                  {item}
+                  Hide
+                </button>
+              </div>
+            </div>
+
+            <div className="flex gap-2 overflow-x-auto border-b border-black/10 p-4 dark:border-white/10 sm:flex-wrap sm:p-5">
+              {chatSuggestions.map((suggestion) => (
+                <button
+                  key={suggestion}
+                  type="button"
+                  onClick={() => sendChatMessage(suggestion)}
+                  className="shrink-0 rounded-full border border-black/10 bg-white/80 px-4 py-2 text-sm font-extrabold text-zinc-700 transition hover:-translate-y-0.5 hover:bg-white dark:border-white/10 dark:bg-white/10 dark:text-zinc-200 dark:hover:bg-white/15"
+                >
+                  {suggestion}
                 </button>
               ))}
             </div>
 
-            <form className="chat-form" onSubmit={handleSubmit}>
+            <div className="flex min-h-[260px] max-h-[52vh] flex-col gap-3 overflow-y-auto p-4 sm:min-h-[340px] sm:p-6 lg:max-h-[500px]">
+              {chatMessages.map((message, index) => (
+                <div key={`${message.type}-${index}`} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <span
+                    className={`max-w-[88%] rounded-2xl px-4 py-3 text-sm font-semibold leading-6 sm:max-w-[82%] sm:text-base ${
+                      message.type === 'user'
+                        ? 'bg-zinc-950 text-white dark:bg-white dark:text-zinc-950'
+                        : 'border border-black/10 bg-white/85 text-zinc-700 dark:border-white/10 dark:bg-white/10 dark:text-zinc-200'
+                    }`}
+                  >
+                    {message.text}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <form onSubmit={handleChatSubmit} className="grid gap-3 border-t border-black/10 bg-white/50 p-4 dark:border-white/10 dark:bg-white/5 sm:grid-cols-[1fr_auto] sm:p-5">
               <input
                 type="text"
-                value={draft}
-                onChange={(event) => setDraft(event.target.value)}
-                placeholder="Type your message..."
-                className="chat-input"
+                value={chatInput}
+                onChange={(event) => setChatInput(event.target.value)}
+                placeholder="Type: Khana kha liya?"
+                aria-label="Chat message"
+                className="min-h-14 rounded-2xl border border-black/10 bg-white/85 px-4 font-semibold text-zinc-950 outline-none transition focus:border-amber-400 focus:ring-4 focus:ring-amber-300/20 dark:border-white/10 dark:bg-white/5 dark:text-white"
               />
-              <button
-                type="submit"
-                className="button button-primary"
-                disabled={isSending}
-              >
-                {isSending ? 'Sending...' : 'Send'}
+              <button type="submit" className="min-h-14 rounded-2xl bg-gradient-to-r from-amber-300 to-yellow-100 px-6 font-extrabold text-zinc-950 shadow-lg shadow-amber-400/20 transition hover:-translate-y-0.5">
+                Send
               </button>
             </form>
-
-            <div className="chat-actions">
-              <a
-                href="https://ig.me/m/bhawani_nyk05"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn github"
-              >
-                Open Instagram
-              </a>
-              <a
-                href="https://instagram.com/bhawani_nyk05"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn github"
-              >
-                Instagram Profile
-              </a>
-              <a href="mailto:bhawaninayak1111@gmail.com" className="btn live">
-                Email Backup
-              </a>
-            </div>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="mx-auto mt-8 flex max-w-3xl justify-center sm:mt-10">
+            <button
+              type="button"
+              onClick={() => setIsChatOpen(true)}
+              className="group inline-flex items-center gap-3 rounded-full border border-black/10 bg-zinc-950 px-5 py-4 font-extrabold text-white shadow-premium transition hover:-translate-y-1 dark:border-white/10 dark:bg-white dark:text-zinc-950 sm:px-7"
+            >
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-amber-300 text-zinc-950 transition group-hover:scale-105">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5" aria-hidden="true">
+                  <path d="M21 12a8 8 0 01-8 8H7l-4 3 1.5-5A8 8 0 1121 12z" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+              Open chat
+            </button>
+          </div>
+        )}
 
-      <div className="contact-grid">
-        {contactLinks.map((item) => (
-          <a
-            key={item.label}
-            href={item.href}
-            target={item.href.startsWith('mailto:') ? undefined : '_blank'}
-            rel={item.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-            className="contact-card"
-          >
-            <span>{item.label}</span>
-            <strong>{item.description}</strong>
-          </a>
-        ))}
+        <footer className="mt-10 text-center text-sm font-semibold text-zinc-500 dark:text-zinc-400">
+          Copyright 2026 Bhawani Shankar. Designed and developed with React + Tailwind CSS.
+        </footer>
       </div>
-
-      <footer className="site-footer">
-        <p>Designed and developed by Bhawani Shankar.</p>
-      </footer>
     </section>
   );
 };

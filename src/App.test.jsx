@@ -4,6 +4,6 @@ import App from './App';
 test('renders portfolio hero content', () => {
   render(<App />);
   expect(
-    screen.getByText(/building polished web experiences/i)
+    screen.getByText(/premium web products/i)
   ).toBeInTheDocument();
 });
