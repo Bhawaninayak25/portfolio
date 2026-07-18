@@ -44,18 +44,30 @@ const HomeSection = () => {
               Full Stack Developer from Bikaner. I build modern SaaS-style applications with polished front-ends and dependable backend workflows.
             </p>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+            <div className="mt-10 grid gap-4 sm:grid-cols-[1.32fr_1fr] lg:grid-cols-[1fr_1fr_1fr]">
               <a
                 href="#projects"
-                className="inline-flex items-center justify-center rounded-full bg-cyan-300 px-7 py-4 text-sm font-bold text-slate-950 transition hover:bg-cyan-200"
+                className="inline-flex items-center justify-center rounded-full bg-cyan-300 px-7 py-4 text-sm font-bold text-slate-950 transition duration-300 hover:bg-cyan-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
               >
                 View projects
               </a>
+
               <a
-                href="#contact"
-                className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-4 text-sm font-bold text-white transition hover:border-cyan-300 hover:bg-white/10"
+                href="https://axixatechnologies.com/hire/bhawani"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/10 px-7 py-4 text-sm font-bold text-white transition duration-300 hover:border-cyan-300 hover:bg-white/15 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
               >
                 Contact me
+              </a>
+
+              <a
+                href="https://github.com/Bhawaninayak25"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center rounded-full bg-transparent px-7 py-4 text-sm font-bold text-white transition duration-300 hover:border-cyan-300 hover:bg-white/10 hover:text-cyan-200 border border-white/10"
+              >
+                View other profile
               </a>
             </div>
 
