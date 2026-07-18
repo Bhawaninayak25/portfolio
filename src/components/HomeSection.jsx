@@ -32,7 +32,7 @@ const HomeSection = () => {
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-16">
           <div className="relative z-10 animate-slide-right">
             <p className="inline-flex items-center gap-3 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.22em] text-cyan-200 shadow-[0_0_0_1px_rgba(56,189,248,0.08)]">
-              Animated portfolio
+              <span className="animate-pulse">•</span> Full Stack Developer
             </p>
 
             <h1 className="mt-8 max-w-4xl font-display text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
