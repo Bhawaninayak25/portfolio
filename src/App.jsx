@@ -17,19 +17,15 @@ function App() {
   }, [theme]);
 
   return (
-    <div className="min-h-screen overflow-hidden bg-[#f5f0e8] text-zinc-950 selection:bg-amber-300/50 dark:bg-[#07080d] dark:text-white">
+    <div className="min-h-screen overflow-hidden bg-[#020916] text-white selection:bg-cyan-300/30">
       <div
-        className="pointer-events-none fixed inset-0 bg-[linear-gradient(to_right,rgba(20,20,20,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(20,20,20,0.06)_1px,transparent_1px)] bg-[size:56px_56px] opacity-60 [mask-image:linear-gradient(to_bottom,black,transparent_78%)] dark:bg-[linear-gradient(to_right,rgba(255,255,255,0.075)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.075)_1px,transparent_1px)]"
+        className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.18),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(249,115,22,0.16),transparent_18%)] opacity-90"
         aria-hidden="true"
-      ></div>
+      />
       <div
-        className="pointer-events-none fixed -left-32 top-0 h-96 w-96 rounded-full bg-amber-300/20 blur-3xl dark:bg-amber-400/10"
+        className="pointer-events-none fixed inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.04),transparent_18%),linear-gradient(90deg,rgba(255,255,255,0.03),transparent_12%)]"
         aria-hidden="true"
-      ></div>
-      <div
-        className="pointer-events-none fixed -right-36 top-72 h-96 w-96 rounded-full bg-cyan-300/20 blur-3xl dark:bg-cyan-400/10"
-        aria-hidden="true"
-      ></div>
+      />
       <Header theme={theme} onToggleTheme={() => setTheme(theme === 'dark' ? 'light' : 'dark')} />
       <main className="relative z-10">
         <Home />

@@ -8,7 +8,7 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section id="testimonials" className="px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <section id="testimonials" className="animate-fade-up px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div className="max-w-3xl">

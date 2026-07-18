@@ -62,12 +62,12 @@ const ProjectsSection = () => {
   );
 
   return (
-    <section id="projects" className="px-4 py-14 sm:px-6 lg:px-8 lg:py-24">
+    <section id="projects" className="animate-fade-up px-4 py-14 sm:px-6 lg:px-8 lg:py-24">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div className="max-w-3xl text-center sm:text-left">
-            <p className="mb-3 text-sm font-extrabold uppercase tracking-[0.2em] text-amber-700 dark:text-amber-300">Featured work</p>
-            <h2 className="font-display text-4xl font-bold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            <p className="mb-3 text-sm font-extrabold uppercase tracking-[0.2em] text-cyan-300">Featured work</p>
+            <h2 className="font-display text-4xl font-bold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
               Case-study style projects with clear outcomes.
             </h2>
           </div>
@@ -91,7 +91,7 @@ const ProjectsSection = () => {
 
         <div className="mt-10 grid gap-4 xl:grid-cols-2">
           {visibleProjects.map((project) => (
-            <article key={project.title} className="overflow-hidden rounded-[1.5rem] border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-1 hover:shadow-premium dark:border-white/10 dark:bg-white/5 sm:rounded-[2rem]">
+            <article key={project.title} className="animate-fade-up overflow-hidden rounded-[1.5rem] border border-black/10 bg-white/70 shadow-sm transition hover:-translate-y-1 hover:shadow-premium dark:border-white/10 dark:bg-white/5 sm:rounded-[2rem]">
               <div className="relative min-h-56 overflow-hidden bg-zinc-950 sm:min-h-72">
                 <img
                   src={project.image}
